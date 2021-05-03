@@ -7,7 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 
 	// "github.com/aws/aws-sdk-go/aws/credentials"
-	"compress/gzip"
+
 	"io"
 	"os"
 
@@ -23,18 +23,6 @@ func check(e error) {
 	if e != nil {
 		panic(e)
 	}
-}
-
-func compress(writer *io.PipeWriter, file *os.File, gzipUpload bool) {
-	defer writer.Close()
-	dstWriter := io.Writer(writer)
-	if gzipUpload {
-		gw := gzip.NewWriter(writer)
-		defer gw.Close()
-		dstWriter = gw
-	}
-	_, err := io.Copy(dstWriter, file)
-	check(err)
 }
 
 func S3Upload(filepath *string, bucket *string, key *string, gzipUpload bool) {

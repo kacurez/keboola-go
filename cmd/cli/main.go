@@ -9,17 +9,19 @@ import (
 )
 
 type UploadCommand struct {
-	CloudProvider     string `arg:"positional,required"`
-	File              string `arg:"positional,required"`
-	DestinationBucket string `arg:"positional,required"`
-	Key               string `help:"s3 key path" default:""`
-	Gzip              bool   `arg:"-g, --gzip" help:"gzip on upload"`
+	CloudProvider              string `arg:"positional,required"`
+	File                       string `arg:"positional,required"`
+	DestinationBucketOrAccount string `arg:"positional,required"`
+	KeyOrContainerPath         string `arg:"-k" help:"s3 key path" default:""`
+	Gzip                       bool   `arg:"-g, --gzip" help:"gzip on upload"`
 }
 
 func doUpload(args *UploadCommand) {
 	switch args.CloudProvider {
 	case "S3":
-		uploading.S3Upload(&args.File, &args.DestinationBucket, &args.Key, args.Gzip)
+		uploading.S3Upload(&args.File, &args.DestinationBucketOrAccount, &args.KeyOrContainerPath, args.Gzip)
+	case "Azure":
+		uploading.AzureUpload(&args.File, &args.DestinationBucketOrAccount, &args.KeyOrContainerPath, args.Gzip)
 	default:
 		fmt.Println("unknown provider:" + args.CloudProvider)
 	}
