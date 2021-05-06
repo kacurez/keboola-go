@@ -1,1 +1,1 @@
-# keboola-sdk-go
+# keboola-go
